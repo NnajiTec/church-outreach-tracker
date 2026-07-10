@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Icon Generator</title>
+</head>
+<body>
+  <canvas id="canvas" width="512" height="512"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    function generateIcon(size) {
+      canvas.width = size;
+      canvas.height = size;
+      
+      // Background
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(0, 0, size, size);
+      
+      // Cross symbol
+      ctx.fillStyle = '#ffffff';
+      const barWidth = size * 0.15;
+      const centerX = size / 2;
+      const centerY = size / 2;
+      
+      // Vertical bar
+      ctx.fillRect(centerX - barWidth/2, size * 0.2, barWidth, size * 0.6);
+      // Horizontal bar
+      ctx.fillRect(size * 0.2, centerY - barWidth/2, size * 0.6, barWidth);
+      
+      // Return as data URL
+      return canvas.toDataURL('image/png');
+    }
+    
+    function downloadIcon(size) {
+      const dataUrl = generateIcon(size);
+      const link = document.createElement('a');
+      link.download = `icon-${size}x${size}.png`;
+      link.href = dataUrl;
+      link.click();
+    }
+    
+    // Generate all sizes
+    const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+    sizes.forEach(size => {
+      setTimeout(() => downloadIcon(size), sizes.indexOf(size) * 500);
+    });
+    
+    console.log('Icons generated! Check your downloads folder.');
+  </script>
+</body>
+</html>

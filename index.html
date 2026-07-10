@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="description" content="Church Outreach Tracker - Manage contacts, visits, and spiritual journeys">
+  <title>Shepherd's Reach · Church Outreach</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json?v=6">
+  
+  <!-- Apple touch icon -->
+  <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png?v=6">
+  
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome 6 icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css?v=6">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+  <!-- Offline indicator bar -->
+  <div id="offline-banner" class="hidden bg-yellow-500 text-yellow-900 text-sm font-medium px-4 py-2 text-center transition-all duration-300">
+    <i class="fas fa-wifi-slash mr-2"></i>
+    You're offline. Changes will sync when connection is restored.
+  </div>
+
+  <!-- Sync status indicator -->
+  <div id="sync-indicator" class="hidden fixed bottom-4 right-4 bg-white shadow-lg rounded-lg px-4 py-2 text-sm border border-gray-200 z-50 flex items-center space-x-2">
+    <i class="fas fa-sync-alt fa-spin text-blue-500"></i>
+    <span id="sync-message">Syncing...</span>
+  </div>
+
+  <!-- ========== MAIN LAYOUT ========== -->
+  <div id="app" class="flex h-screen overflow-hidden">
+
+    <!-- ---------- LEFT SIDEBAR ---------- -->
+    <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto lg:shadow-md flex flex-col border-r border-gray-200">
+      <!-- Sidebar header -->
+      <div class="flex items-center justify-between h-16 px-4 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-church text-xl"></i>
+          <span id="sidebar-church-name" class="font-semibold text-base tracking-tight truncate">Shepherd's Reach</span>
+        </div>
+        <button id="close-sidebar-btn" class="lg:hidden text-white hover:text-blue-200 transition">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Navigation links -->
+      <nav class="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group active" data-page="dashboard">
+          <i class="fas fa-th-large w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="contacts">
+          <i class="fas fa-address-book w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Contacts</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="followup">
+          <i class="fas fa-hand-holding-heart w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Follow-up</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="calendar">
+          <i class="fas fa-calendar-alt w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Calendar</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="reports">
+          <i class="fas fa-chart-bar w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Reports</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="prayers">
+          <i class="fas fa-pray w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Prayer Requests</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="families">
+          <i class="fas fa-home w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Families</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="importexport">
+          <i class="fas fa-exchange-alt w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Import/Export</span>
+        </a>
+        <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition group" data-page="settings">
+          <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar footer -->
+      <div class="border-t border-gray-100 p-4 flex items-center space-x-3 bg-gray-50/50">
+        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-gray-900 truncate">Pastor James</p>
+          <p class="text-xs text-gray-500 truncate">admin@church.org</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Backdrop for mobile sidebar -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/30 z-30 hidden lg:hidden"></div>
+
+    <!-- ========== MAIN CONTENT AREA ========== -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+      
+      <!-- TOP NAVIGATION BAR -->
+      <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-6 shadow-sm sticky top-0 z-20">
+        <div class="flex items-center space-x-4 flex-1">
+          <button id="open-sidebar-btn" class="lg:hidden text-gray-500 hover:text-blue-600 focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+          <div class="relative w-full max-w-md hidden sm:block">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input type="search" placeholder="Search contacts, visits..." class="block w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg bg-gray-50 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition outline-none">
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3 sm:space-x-5">
+          <span id="connection-status" class="hidden sm:inline-flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+            <i class="fas fa-circle text-[8px] mr-1"></i> Online
+          </span>
+          <div class="relative">
+            <button id="notification-bell-btn" class="relative text-gray-500 hover:text-blue-600 transition" aria-label="Notifications">
+              <i class="fas fa-bell text-xl"></i>
+              <span id="notification-badge" class="hidden absolute -top-1 -right-1.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">0</span>
+            </button>
+            <div id="notification-panel" class="hidden absolute right-0 mt-3 w-80 max-w-[calc(100vw-2rem)] bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+              <div class="flex items-start justify-between gap-3 px-4 py-3 border-b border-gray-100">
+                <div>
+                  <p class="text-sm font-semibold text-gray-800">Notifications</p>
+                  <p id="notification-summary" class="text-xs text-gray-500">No active alerts</p>
+                </div>
+                <button id="notification-close-btn" class="text-gray-400 hover:text-gray-600 transition" aria-label="Close notifications">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <div id="notification-list" class="max-h-80 overflow-y-auto"></div>
+            </div>
+          </div>
+          <button class="text-gray-500 hover:text-blue-600 transition">
+            <i class="fas fa-cog text-xl"></i>
+          </button>
+          <span id="top-church-name" class="hidden md:inline text-sm font-medium text-gray-700 bg-blue-50 px-3 py-1 rounded-full">Shepherd's Reach</span>
+          <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-semibold shadow">
+            PJ
+          </div>
+        </div>
+      </header>
+
+      <!-- ========== PAGE CONTENT ========== -->
+      <main id="main-content" class="flex-1 overflow-y-auto p-4 lg:p-6 bg-gray-50">
+        
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="page-view">
+          <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+            <p class="text-gray-500 text-sm">Welcome back, Pastor James</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between hover:shadow-md transition">
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Total Contacts</p>
+                <p class="text-3xl font-bold text-gray-800" id="stat-total-contacts">0</p>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between hover:shadow-md transition">
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Need Follow-up</p>
+                <p class="text-3xl font-bold text-amber-600" id="stat-followup">0</p>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600"><i class="fas fa-exclamation-circle"></i></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between hover:shadow-md transition">
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Appointments Today</p>
+                <p class="text-3xl font-bold text-blue-600" id="stat-today-appointments">0</p>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-calendar-check"></i></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between hover:shadow-md transition">
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Overdue Visits</p>
+                <p class="text-3xl font-bold text-red-500" id="stat-overdue">0</p>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500"><i class="fas fa-clock"></i></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <h2 class="font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-history mr-2 text-blue-500"></i>Recent Activity</h2>
+              <div id="recent-activity" class="space-y-3 text-sm text-gray-600">
+                <p class="text-gray-400 italic">No recent activity</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <h2 class="font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-calendar mr-2 text-blue-500"></i>Upcoming Appointments</h2>
+              <div id="upcoming-appointments" class="space-y-3 text-sm text-gray-600">
+                <p class="text-gray-400 italic">No upcoming appointments</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prayer Requests Dashboard Widget -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <h2 class="font-semibold text-gray-700 mb-4 flex items-center">
+              <i class="fas fa-pray text-blue-500 mr-2"></i>Recent Prayer Requests
+            </h2>
+            <div id="dashboard-prayers" class="space-y-1">
+              <p class="text-sm text-gray-400 italic">No prayer requests yet</p>
+            </div>
+            <a href="#" onclick="app.navigateTo('prayers')" class="text-sm text-blue-600 hover:text-blue-700 mt-3 inline-block">View all prayer requests →</a>
+          </div>
+        </section>
+
+        <!-- CONTACTS VIEW -->
+        <section id="view-contacts" class="page-view hidden">
+          <div class="mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 class="text-2xl font-bold text-gray-800">Contacts</h1>
+                <p class="text-gray-500 text-sm" id="contacts-count">Manage your church contacts</p>
+              </div>
+              <button id="add-contact-btn" class="px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition shadow-sm flex items-center justify-center">
+                <i class="fas fa-plus mr-2"></i>Add Contact
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+            <div class="flex flex-col lg:flex-row gap-4">
+              <div class="flex-1 relative">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="contact-search" placeholder="Search by name, phone, address..." class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm">
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-500">Sort:</span>
+                <button class="sort-btn px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition flex items-center" data-sort="name">Name <i class="fas fa-sort-up text-blue-600 ml-1"></i></button>
+                <button class="sort-btn px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition flex items-center" data-sort="status">Status <i class="fas fa-sort text-gray-400 ml-1"></i></button>
+                <button class="sort-btn px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition flex items-center" data-sort="updatedAt">Recent <i class="fas fa-sort text-gray-400 ml-1"></i></button>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-4" id="status-filters">
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-blue-600 text-white transition" data-status="all">All</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-status="unreached">Unreached</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-status="visited">Visited</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-status="interested">Interested</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-status="bible-study">Bible Study</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-status="saved">Saved</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-status="baptized">Baptized</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-status="serving">Serving</button>
+            </div>
+          </div>
+
+          <div id="contact-detail" class="mb-6"></div>
+          <div id="contacts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"></div>
+          <div id="contacts-pagination"></div>
+        </section>
+
+        <!-- PROFILE VIEW -->
+        <section id="view-profile" class="page-view hidden">
+          <div id="profile-container"></div>
+        </section>
+
+        <!-- FOLLOW-UP VIEW -->
+        <section id="view-followup" class="page-view hidden">
+          <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Follow-up Management</h1>
+            <p class="text-gray-500 text-sm">Track visits, manage reminders, and never miss a follow-up</p>
+          </div>
+          <div id="followup-container"></div>
+        </section>
+
+        <!-- CALENDAR VIEW -->
+        <section id="view-calendar" class="page-view hidden">
+          <div id="calendar-container"></div>
+          <div id="calendar-event-detail"></div>
+        </section>
+
+        <!-- REPORTS VIEW -->
+        <section id="view-reports" class="page-view hidden">
+          <div id="reports-container"></div>
+        </section>
+
+        <!-- PRAYER REQUESTS VIEW -->
+        <section id="view-prayers" class="page-view hidden">
+          <div id="prayers-container"></div>
+        </section>
+
+        <!-- FAMILIES VIEW -->
+        <section id="view-families" class="page-view hidden">
+          <div id="families-container"></div>
+        </section>
+
+        <!-- IMPORT/EXPORT VIEW -->
+        <section id="view-importexport" class="page-view hidden">
+          <div id="importexport-container"></div>
+        </section>
+
+        <!-- SETTINGS VIEW -->
+        <section id="view-settings" class="page-view hidden">
+          <div id="settings-container"></div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ========== MODALS ========== -->
+  
+  <!-- Contact Modal -->
+  <div id="contact-modal" class="modal hidden fixed inset-0 z-50 overflow-y-auto">
+    <div class="modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="app.contactsManager.closeModal()"></div>
+    <div class="relative min-h-screen flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 id="modal-title" class="text-lg font-semibold text-gray-900">Add Contact</h3>
+          <button onclick="app.contactsManager.closeModal()" class="text-gray-400 hover:text-gray-600 transition">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <form id="contact-form" onsubmit="event.preventDefault(); app.contactsManager.saveContact();"></form>
+        <div class="flex justify-end space-x-3 mt-6">
+          <button onclick="app.contactsManager.closeModal()" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition">Cancel</button>
+          <button onclick="app.contactsManager.saveContact()" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">Save Contact</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visit Modal -->
+  <div id="visit-modal" class="modal hidden fixed inset-0 z-50 overflow-y-auto">
+    <div class="modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="app.followUpManager.closeVisitModal()"></div>
+    <div class="relative min-h-screen flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 id="visit-modal-title" class="text-lg font-semibold text-gray-900">Schedule Visit</h3>
+          <button onclick="app.followUpManager.closeVisitModal()" class="text-gray-400 hover:text-gray-600 transition">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <form id="visit-form" onsubmit="event.preventDefault(); app.followUpManager.saveVisit();"></form>
+        <div class="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-100">
+          <button onclick="app.followUpManager.closeVisitModal()" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition">Cancel</button>
+          <button onclick="app.followUpManager.saveVisit()" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+            <i class="fas fa-save mr-2"></i>Save Visit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other modal containers (populated dynamically) -->
+  <div id="prayer-modal-container"></div>
+  <div id="family-modal-container"></div>
+
+  <!-- ========== SCRIPTS (loaded in order) ========== -->
+  <script src="js/db.js?v=6"></script>
+  <script src="js/connection.js?v=6"></script>
+  <script src="js/sync.js?v=6"></script>
+  <script src="js/modals.js?v=6"></script>
+  <script src="js/contacts.js?v=6"></script>
+  <script src="js/profile.js?v=6"></script>
+  <script src="js/followup.js?v=6"></script>
+  <script src="js/calendar.js?v=6"></script>
+  <script src="js/reports.js?v=6"></script>
+  <script src="js/prayers.js?v=6"></script>
+  <script src="js/families.js?v=6"></script>
+  <script src="js/importexport.js?v=6"></script>
+  <script src="js/settings.js?v=6"></script>
+  <script src="js/notifications.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
+</body>
+</html>
