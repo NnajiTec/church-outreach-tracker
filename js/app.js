@@ -21,51 +21,74 @@ class ChurchApp {
   }
 
   async init() {
-    // Initialize database
-    await db.init();
-
-    // Register service worker
-    this.registerServiceWorker();
-
-    // Initialize settings first (needed by other modules)
-    this.settingsManager = new SettingsManager();
-    await this.settingsManager.loadSettings();
-    
-    // Apply initial settings
-    this.settingsManager.applySetting('theme', this.settingsManager.settings.theme);
-    this.settingsManager.applySetting('churchName', this.settingsManager.settings.churchName);
-
-    // Initialize all managers
-    this.contactsManager = new ContactsManager();
-    this.profileManager = new ProfileManager();
-    this.followUpManager = new FollowUpManager();
-    this.calendarManager = new CalendarManager();
-    this.reportsManager = new ReportsManager();
-    this.prayerManager = new PrayerManager();
-    this.familyManager = new FamilyManager();
-    this.importExportManager = new ImportExportManager();
-    this.notificationManager = new NotificationManager();
-    this.modalManager = new ModalManager();
-
-    // Setup UI
+    // 1. SETUP UI FIRST: This ensures the sidebar and clicks ALWAYS work, 
+    // even if a database or file fails to load later.
     this.setupNavigation();
     this.setupSidebar();
     this.setupSearch();
 
-    // Load initial data
-    await this.loadDashboardData();
-    await this.notificationManager.init();
-
-    // Navigate to default page from settings or hash
-    const hash = window.location.hash.replace('#', '');
-    const defaultPage = this.settingsManager.settings.defaultView || 'dashboard';
+    // 2. Initialize database
+    try { 
+      await db.init(); 
+    } catch(e) { 
+      console.warn('DB Init failed:', e); 
+    }
     
-    if (hash) {
-      this.navigateTo(hash, false);
-    } else {
-      this.navigateTo(defaultPage, false);
+    this.registerServiceWorker();
+
+    // 3. Initialize Settings Safely
+    try {
+      if (typeof SettingsManager !== 'undefined') {
+        this.settingsManager = new SettingsManager();
+        await this.settingsManager.loadSettings();
+        const settings = this.settingsManager.settings || {};
+        this.settingsManager.applySetting('theme', settings.theme);
+        this.settingsManager.applySetting('churchName', settings.churchName);
+        this.updateUserProfile(settings.pastorName || 'Pastor James');
+      } else {
+        console.warn('Settings.js failed to load. Using defaults.');
+        this.updateUserProfile('Pastor James');
+      }
+    } catch(e) { 
+      console.warn('Settings initialization failed:', e); 
     }
 
+    // 4. Initialize Managers Safely
+    const safeInit = (ManagerClass) => {
+      try { 
+        return typeof ManagerClass !== 'undefined' ? new ManagerClass() : null; 
+      } catch(e) { 
+        return null; 
+      }
+    };
+
+    this.contactsManager = safeInit(ContactsManager);
+    this.profileManager = safeInit(ProfileManager);
+    this.followUpManager = safeInit(FollowUpManager);
+    this.calendarManager = safeInit(CalendarManager);
+    this.reportsManager = safeInit(ReportsManager);
+    this.prayerManager = safeInit(PrayerManager);
+    this.familyManager = safeInit(FamilyManager);
+    this.importExportManager = safeInit(ImportExportManager);
+    this.notificationManager = safeInit(NotificationManager);
+    this.modalManager = safeInit(ModalManager);
+
+    // 5. Load Data
+    try {
+      await this.loadDashboardData();
+      if (this.notificationManager) await this.notificationManager.init();
+    } catch(e) { 
+      console.warn('Dashboard data failed:', e); 
+    }
+
+    // 6. Navigate
+    const hash = window.location.hash.replace('#', '');
+    let defaultPage = 'dashboard';
+    if (this.settingsManager && this.settingsManager.settings) {
+      defaultPage = this.settingsManager.settings.defaultView || 'dashboard';
+    }
+    
+    this.navigateTo(hash || defaultPage, false);
     console.log('Church Outreach Tracker initialized successfully');
   }
 
@@ -75,7 +98,6 @@ class ChurchApp {
         const registration = await navigator.serviceWorker.register('./sw.js?v=6');
         console.log('Service Worker registered:', registration.scope);
 
-        // Check for updates
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           newWorker.addEventListener('statechange', () => {
@@ -101,7 +123,6 @@ class ChurchApp {
       });
     });
 
-    // Handle browser back/forward
     window.addEventListener('popstate', (e) => {
       if (e.state && e.state.page) {
         this.navigateTo(e.state.page, false);
@@ -110,23 +131,19 @@ class ChurchApp {
   }
 
   navigateTo(page, pushState = true) {
-    // Destroy charts if leaving reports page
     if (this.currentPage === 'reports' && page !== 'reports' && this.reportsManager) {
       this.reportsManager.destroy();
     }
 
-    // Hide all views
     document.querySelectorAll('.page-view').forEach(view => {
       view.classList.add('hidden');
     });
 
-    // Show selected view
     const targetView = document.getElementById(`view-${page}`);
     if (targetView) {
       targetView.classList.remove('hidden');
     }
 
-    // Update active nav item
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('active');
       if (item.dataset.page === page) {
@@ -134,60 +151,40 @@ class ChurchApp {
       }
     });
 
-    // Update URL
     if (pushState) {
       history.pushState({ page }, '', `#${page}`);
     }
 
     this.currentPage = page;
-
-    // Close sidebar on mobile
     this.closeSidebar();
 
-    // Initialize page-specific modules
     switch(page) {
       case 'dashboard':
         this.loadDashboardData();
         break;
       case 'contacts':
-        if (this.contactsManager) {
-          this.contactsManager.init();
-        }
+        if (this.contactsManager) this.contactsManager.init();
         break;
       case 'followup':
-        if (this.followUpManager) {
-          this.followUpManager.init();
-        }
+        if (this.followUpManager) this.followUpManager.init();
         break;
       case 'calendar':
-        if (this.calendarManager) {
-          this.calendarManager.init();
-        }
+        if (this.calendarManager) this.calendarManager.init();
         break;
       case 'reports':
-        if (this.reportsManager) {
-          this.reportsManager.init();
-        }
+        if (this.reportsManager) this.reportsManager.init();
         break;
       case 'prayers':
-        if (this.prayerManager) {
-          this.prayerManager.init();
-        }
+        if (this.prayerManager) this.prayerManager.init();
         break;
       case 'families':
-        if (this.familyManager) {
-          this.familyManager.init();
-        }
+        if (this.familyManager) this.familyManager.init();
         break;
       case 'importexport':
-        if (this.importExportManager) {
-          this.importExportManager.init();
-        }
+        if (this.importExportManager) this.importExportManager.init();
         break;
       case 'settings':
-        if (this.settingsManager) {
-          this.settingsManager.init();
-        }
+        if (this.settingsManager) this.settingsManager.init();
         break;
     }
   }
@@ -202,7 +199,6 @@ class ChurchApp {
     closeBtn?.addEventListener('click', () => this.closeSidebar());
     backdrop?.addEventListener('click', () => this.closeSidebar());
 
-    // Close sidebar on window resize (if mobile becomes desktop)
     window.addEventListener('resize', () => {
       if (window.innerWidth >= 1024) {
         this.closeSidebar();
@@ -233,14 +229,44 @@ class ChurchApp {
 
     searchInput?.addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase();
-      console.log('Global search query:', query);
-      // Future: implement global search across all modules
+      
+      if (this.currentPage === 'families' && this.familyManager) {
+        const familySearch = document.getElementById('family-search');
+        if (familySearch) familySearch.value = query;
+        
+        this.familyManager.searchQuery = query;
+        this.familyManager.currentPage = 1;
+        this.familyManager.applyFilters();
+        const familyContent = document.getElementById('family-content');
+        if (familyContent) familyContent.innerHTML = this.familyManager.renderFamilyGrid();
+        this.familyManager.renderPagination();
+        
+      } else {
+        if (this.currentPage !== 'contacts' && query.length > 0) {
+          this.navigateTo('contacts', false); 
+        }
+        
+        const contactSearch = document.getElementById('contact-search');
+        if (contactSearch) contactSearch.value = query;
+        
+        if (this.contactsManager) {
+          this.contactsManager.searchQuery = query;
+          this.contactsManager.currentPage = 1;
+          this.contactsManager.applyFilters();
+          this.contactsManager.renderContactList();
+        }
+      }
+    });
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+      });
     });
   }
 
   async loadDashboardData() {
     try {
-      // Load contacts
       const contacts = await db.getAll('contacts');
       const visits = await db.getAll('visits');
 
@@ -248,7 +274,6 @@ class ChurchApp {
       const todayVisits = visits.filter(v => v.date?.split('T')[0] === today);
       const overdueVisits = visits.filter(v => v.date < today && v.status === 'scheduled');
 
-      // Update stat cards
       const totalContactsEl = document.getElementById('stat-total-contacts');
       const followupEl = document.getElementById('stat-followup');
       const todayApptEl = document.getElementById('stat-today-appointments');
@@ -259,7 +284,6 @@ class ChurchApp {
       if (todayApptEl) todayApptEl.textContent = todayVisits.length;
       if (overdueEl) overdueEl.textContent = overdueVisits.length;
 
-      // Update recent activity
       const recentActivity = document.getElementById('recent-activity');
       if (recentActivity) {
         const recentVisits = visits
@@ -281,7 +305,6 @@ class ChurchApp {
         }
       }
 
-      // Update upcoming appointments
       const upcomingAppointments = document.getElementById('upcoming-appointments');
       if (upcomingAppointments) {
         const upcoming = visits
@@ -304,7 +327,6 @@ class ChurchApp {
         }
       }
 
-      // Update prayer requests widget
       if (this.prayerManager) {
         const prayerStats = await this.prayerManager.getDashboardPrayers();
         const prayerContainer = document.getElementById('dashboard-prayers');
@@ -337,6 +359,28 @@ class ChurchApp {
     div.textContent = text;
     return div.innerHTML;
   }
+
+  updateUserProfile(fullName) {
+    const nameEl = document.getElementById('sidebar-user-name');
+    const topAvatarEl = document.getElementById('top-nav-avatar');
+    const sidebarAvatarEl = document.getElementById('sidebar-avatar');
+
+    if (nameEl) {
+      nameEl.textContent = fullName;
+    }
+
+    const initials = fullName
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+      
+    const finalInitials = initials || 'U';
+
+    if (topAvatarEl) topAvatarEl.textContent = finalInitials;
+    if (sidebarAvatarEl) sidebarAvatarEl.textContent = finalInitials;
+  }
 }
 
 // Initialize app when DOM is ready
@@ -345,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.app.init();
 });
 
-// Handle initial hash navigation
 window.addEventListener('hashchange', () => {
   const page = window.location.hash.replace('#', '') || 'dashboard';
   if (window.app) {

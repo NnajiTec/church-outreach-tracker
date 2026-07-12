@@ -1,6 +1,6 @@
 /**
  * Church Outreach Tracker
- * Contacts Module - Phase 2
+ * Contacts Module
  * Copyright (c) 2024. All rights reserved.
  */
 
@@ -275,9 +275,15 @@ class ContactsManager {
             </select>
           </div>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Next Appointment</label>
-          <input type="date" id="contact-appointment" value="${contact.nextAppointment ? contact.nextAppointment.split('T')[0] : ''}" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Next Appointment Date</label>
+            <input type="date" id="contact-appointment-date" value="${contact.nextAppointment ? contact.nextAppointment.split('T')[0] : ''}" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+            <input type="time" id="contact-appointment-time" value="${contact.nextAppointment && contact.nextAppointment.includes('T') ? contact.nextAppointment.split('T')[1].substring(0,5) : ''}" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+          </div>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
@@ -295,6 +301,10 @@ class ContactsManager {
     const name = document.getElementById('contact-name')?.value.trim();
     if (!name) { alert('Please enter a name'); return; }
 
+    const apptDate = document.getElementById('contact-appointment-date')?.value;
+    const apptTime = document.getElementById('contact-appointment-time')?.value;
+    const nextAppointment = apptDate ? `${apptDate}T${apptTime || '12:00'}` : '';
+
     const contact = {
       id: id || 'contact_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9),
       name,
@@ -303,7 +313,7 @@ class ContactsManager {
       address: document.getElementById('contact-address')?.value.trim() || '',
       occupation: document.getElementById('contact-occupation')?.value.trim() || '',
       status: document.getElementById('contact-status')?.value || 'unreached',
-      nextAppointment: document.getElementById('contact-appointment')?.value || '',
+      nextAppointment: nextAppointment,
       notes: document.getElementById('contact-notes')?.value.trim() || '',
       photo: '',
       createdAt: id ? (await db.get('contacts', id))?.createdAt : new Date().toISOString(),
@@ -312,6 +322,26 @@ class ContactsManager {
 
     try {
       await db.put('contacts', contact);
+      
+      // Auto-create a Visit record so it shows up on the Calendar & Dashboard!
+      if (nextAppointment) {
+        const visits = await db.getAll('visits');
+        const existingVisit = visits.find(v => v.contactId === contact.id && v.date === nextAppointment);
+        if (!existingVisit) {
+          const visit = {
+            id: 'visit_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9),
+            contactId: contact.id,
+            date: nextAppointment,
+            time: apptTime || '',
+            notes: 'Scheduled from contact profile',
+            status: 'scheduled',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          };
+          await db.put('visits', visit);
+        }
+      }
+
       if (!connectionManager.isOnline) await db.addToSyncQueue(id ? 'update' : 'create', 'contacts', contact);
       this.closeModal();
       await this.loadContacts();

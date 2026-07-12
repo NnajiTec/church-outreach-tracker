@@ -1,6 +1,6 @@
 /**
  * Church Outreach Tracker
- * Import/Export Module - Phase 9
+ * Import/Export Module
  * Copyright (c) 2024. All rights reserved.
  */
 
@@ -39,8 +39,7 @@ class ImportExportManager {
           </h2>
           
           <div class="space-y-4">
-            <div id="import-dropzone" 
-                 class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50/50 transition cursor-pointer">
+            <div id="import-dropzone" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50/50 transition cursor-pointer">
               <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
               <p class="text-gray-600 font-medium">Drop files here or click to browse</p>
               <p class="text-sm text-gray-400 mt-1">Supports CSV, Excel (.xlsx), and JSON files</p>
@@ -77,8 +76,7 @@ class ImportExportManager {
               </div>
             </div>
 
-            <button id="start-import-btn" disabled
-                    class="w-full px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            <button id="start-import-btn" disabled class="w-full px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
               <i class="fas fa-upload mr-2"></i>Start Import
             </button>
 
@@ -119,38 +117,23 @@ class ImportExportManager {
               <div class="space-y-2">
                 <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer">
                   <input type="checkbox" class="export-checkbox rounded text-blue-600 focus:ring-blue-500" data-type="contacts" checked>
-                  <div class="ml-3">
-                    <p class="font-medium text-gray-800">Contacts</p>
-                    <p class="text-xs text-gray-500">All contact records</p>
-                  </div>
+                  <div class="ml-3"><p class="font-medium text-gray-800">Contacts</p><p class="text-xs text-gray-500">All contact records</p></div>
                 </label>
                 <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer">
                   <input type="checkbox" class="export-checkbox rounded text-blue-600 focus:ring-blue-500" data-type="visits" checked>
-                  <div class="ml-3">
-                    <p class="font-medium text-gray-800">Visits</p>
-                    <p class="text-xs text-gray-500">Visit history and appointments</p>
-                  </div>
+                  <div class="ml-3"><p class="font-medium text-gray-800">Visits</p><p class="text-xs text-gray-500">Visit history and appointments</p></div>
                 </label>
                 <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer">
                   <input type="checkbox" class="export-checkbox rounded text-blue-600 focus:ring-blue-500" data-type="prayers">
-                  <div class="ml-3">
-                    <p class="font-medium text-gray-800">Prayer Requests</p>
-                    <p class="text-xs text-gray-500">All prayer requests</p>
-                  </div>
+                  <div class="ml-3"><p class="font-medium text-gray-800">Prayer Requests</p><p class="text-xs text-gray-500">All prayer requests</p></div>
                 </label>
                 <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer">
                   <input type="checkbox" class="export-checkbox rounded text-blue-600 focus:ring-blue-500" data-type="families">
-                  <div class="ml-3">
-                    <p class="font-medium text-gray-800">Families</p>
-                    <p class="text-xs text-gray-500">Family groups and members</p>
-                  </div>
+                  <div class="ml-3"><p class="font-medium text-gray-800">Families</p><p class="text-xs text-gray-500">Family groups and members</p></div>
                 </label>
                 <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer">
                   <input type="checkbox" class="export-checkbox rounded text-blue-600 focus:ring-blue-500" data-type="settings">
-                  <div class="ml-3">
-                    <p class="font-medium text-gray-800">Settings</p>
-                    <p class="text-xs text-gray-500">Church information and preferences</p>
-                  </div>
+                  <div class="ml-3"><p class="font-medium text-gray-800">Settings</p><p class="text-xs text-gray-500">Church information and preferences</p></div>
                 </label>
               </div>
             </div>
@@ -158,18 +141,10 @@ class ImportExportManager {
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Export Format</label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white transition" data-format="csv">
-                  <i class="fas fa-file-csv mr-1"></i>CSV
-                </button>
-                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-format="excel">
-                  <i class="fas fa-file-excel mr-1"></i>Excel
-                </button>
-                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-format="json">
-                  <i class="fas fa-file-code mr-1"></i>JSON
-                </button>
-                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-format="pdf">
-                  <i class="fas fa-file-pdf mr-1"></i>PDF
-                </button>
+                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white transition" data-format="csv"><i class="fas fa-file-csv mr-1"></i>CSV</button>
+                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-format="excel"><i class="fas fa-file-excel mr-1"></i>Excel</button>
+                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-format="json"><i class="fas fa-file-code mr-1"></i>JSON</button>
+                <button class="export-format-btn px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-format="pdf"><i class="fas fa-file-pdf mr-1"></i>PDF</button>
               </div>
             </div>
 
@@ -178,21 +153,15 @@ class ImportExportManager {
             </button>
 
             <div class="grid grid-cols-2 gap-2">
-              <button id="export-selected-btn" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
-                <i class="fas fa-check-square mr-1"></i>Export Selected
-              </button>
-              <button id="backup-btn" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
-                <i class="fas fa-database mr-1"></i>Full Backup
-              </button>
+              <button id="export-selected-btn" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition"><i class="fas fa-check-square mr-1"></i>Export Selected</button>
+              <button id="backup-btn" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition"><i class="fas fa-database mr-1"></i>Full Backup</button>
             </div>
 
             <div class="border-t border-gray-100 pt-4 mt-4">
               <h4 class="font-medium text-gray-800 mb-2">Restore Backup</h4>
               <div class="flex space-x-2">
                 <input type="file" id="restore-file-input" accept=".json" class="hidden">
-                <button id="restore-btn" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
-                  <i class="fas fa-undo mr-2"></i>Restore from Backup
-                </button>
+                <button id="restore-btn" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition"><i class="fas fa-undo mr-2"></i>Restore from Backup</button>
               </div>
             </div>
           </div>
@@ -221,46 +190,24 @@ class ImportExportManager {
     const fileInput = document.getElementById('import-file-input');
 
     dropzone?.addEventListener('click', () => fileInput?.click());
-    
-    dropzone?.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('border-blue-400', 'bg-blue-50');
-    });
-
-    dropzone?.addEventListener('dragleave', () => {
-      dropzone.classList.remove('border-blue-400', 'bg-blue-50');
-    });
-
-    dropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('border-blue-400', 'bg-blue-50');
-      const files = e.dataTransfer.files;
-      if (files.length > 0) this.handleFileSelection(files[0]);
-    });
-
-    fileInput?.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) this.handleFileSelection(e.target.files[0]);
-    });
+    dropzone?.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('border-blue-400', 'bg-blue-50'); });
+    dropzone?.addEventListener('dragleave', () => dropzone.classList.remove('border-blue-400', 'bg-blue-50'));
+    dropzone?.addEventListener('drop', (e) => { e.preventDefault(); dropzone.classList.remove('border-blue-400', 'bg-blue-50'); const files = e.dataTransfer.files; if (files.length > 0) this.handleFileSelection(files[0]); });
+    fileInput?.addEventListener('change', (e) => { if (e.target.files.length > 0) this.handleFileSelection(e.target.files[0]); });
 
     document.getElementById('start-import-btn')?.addEventListener('click', () => this.startImport());
     document.getElementById('export-all-btn')?.addEventListener('click', () => this.exportAllData());
     document.getElementById('export-selected-btn')?.addEventListener('click', () => this.exportSelectedData());
     document.getElementById('backup-btn')?.addEventListener('click', () => this.createFullBackup());
     document.getElementById('restore-btn')?.addEventListener('click', () => document.getElementById('restore-file-input')?.click());
-    document.getElementById('restore-file-input')?.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) this.restoreBackup(e.target.files[0]);
-    });
+    document.getElementById('restore-file-input')?.addEventListener('change', (e) => { if (e.target.files.length > 0) this.restoreBackup(e.target.files[0]); });
   }
 
   setupImportTypeButtons() {
     document.querySelectorAll('.import-type-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.import-type-btn').forEach(b => {
-          b.classList.remove('bg-blue-600', 'text-white');
-          b.classList.add('bg-gray-100', 'text-gray-600');
-        });
-        btn.classList.remove('bg-gray-100', 'text-gray-600');
-        btn.classList.add('bg-blue-600', 'text-white');
+        document.querySelectorAll('.import-type-btn').forEach(b => { b.classList.remove('bg-blue-600', 'text-white'); b.classList.add('bg-gray-100', 'text-gray-600'); });
+        btn.classList.remove('bg-gray-100', 'text-gray-600'); btn.classList.add('bg-blue-600', 'text-white');
         this.importType = btn.dataset.type;
       });
     });
@@ -270,12 +217,8 @@ class ImportExportManager {
     document.querySelectorAll('.duplicate-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         this.duplicateStrategy = btn.dataset.strategy;
-        document.querySelectorAll('.duplicate-btn').forEach(b => {
-          b.classList.remove('bg-blue-600', 'text-white');
-          b.classList.add('bg-gray-100', 'text-gray-600');
-        });
-        btn.classList.remove('bg-gray-100', 'text-gray-600');
-        btn.classList.add('bg-blue-600', 'text-white');
+        document.querySelectorAll('.duplicate-btn').forEach(b => { b.classList.remove('bg-blue-600', 'text-white'); b.classList.add('bg-gray-100', 'text-gray-600'); });
+        btn.classList.remove('bg-gray-100', 'text-gray-600'); btn.classList.add('bg-blue-600', 'text-white');
       });
     });
   }
@@ -284,12 +227,8 @@ class ImportExportManager {
     document.querySelectorAll('.export-format-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         this.exportFormat = btn.dataset.format;
-        document.querySelectorAll('.export-format-btn').forEach(b => {
-          b.classList.remove('bg-blue-600', 'text-white');
-          b.classList.add('bg-gray-100', 'text-gray-600');
-        });
-        btn.classList.remove('bg-gray-100', 'text-gray-600');
-        btn.classList.add('bg-blue-600', 'text-white');
+        document.querySelectorAll('.export-format-btn').forEach(b => { b.classList.remove('bg-blue-600', 'text-white'); b.classList.add('bg-gray-100', 'text-gray-600'); });
+        btn.classList.remove('bg-gray-100', 'text-gray-600'); btn.classList.add('bg-blue-600', 'text-white');
       });
     });
   }
@@ -300,23 +239,10 @@ class ImportExportManager {
       let data;
 
       switch(extension) {
-        case 'csv':
-          data = await this.parseCSV(file);
-          break;
-        case 'xlsx':
-          try {
-            data = await this.parseXLSX(file);
-          } catch (error) {
-            this.showValidationError('Excel support could not be loaded. Please use CSV or JSON instead.');
-            return;
-          }
-          break;
-        case 'json':
-          data = await this.parseJSON(file);
-          break;
-        default:
-          this.showValidationError('Unsupported file format. Please use CSV, Excel, or JSON files.');
-          return;
+        case 'csv': data = await this.parseCSV(file); break;
+        case 'xlsx': try { data = await this.parseXLSX(file); } catch (error) { this.showValidationError('Excel support could not be loaded.'); return; } break;
+        case 'json': data = await this.parseJSON(file); break;
+        default: this.showValidationError('Unsupported file format.'); return;
       }
 
       if (!data || data.length === 0) {
@@ -324,6 +250,7 @@ class ImportExportManager {
         return;
       }
 
+      data = this.normalizeHeaders(data);
       const importType = document.querySelector('.import-type-btn.bg-blue-600')?.dataset.type || 'contacts';
       const validation = this.validateImportData(data, importType);
 
@@ -337,11 +264,34 @@ class ImportExportManager {
       await this.detectDuplicates(importType);
       this.showPreview(data);
       document.getElementById('start-import-btn').disabled = false;
-
     } catch (error) {
       console.error('File parsing error:', error);
       this.showValidationError('Failed to parse file. Please check the file format.');
     }
+  }
+
+  normalizeHeaders(data) {
+    return data.map(row => {
+      const normalized = {};
+      for (const key in row) {
+        // Strip underscores so "next_appointment" becomes "next appointment"
+        const cleanKey = key.toLowerCase().replace(/_/g, ' ').trim();
+        let finalKey = key;
+
+        if (['name', 'full name', 'contact name', 'first name'].includes(cleanKey)) finalKey = 'name';
+        else if (['phone', 'phone number', 'mobile', 'cell'].includes(cleanKey)) finalKey = 'phone';
+        else if (['email', 'email address'].includes(cleanKey)) finalKey = 'email';
+        else if (['address', 'home address', 'location'].includes(cleanKey)) finalKey = 'address';
+        else if (['status', 'contact status'].includes(cleanKey)) finalKey = 'status';
+        else if (['notes', 'remark', 'remarks', 'description'].includes(cleanKey)) finalKey = 'notes';
+        else if (['appointment', 'appointment date', 'next appointment', 'date'].includes(cleanKey)) finalKey = 'nextAppointment';
+        else if (['time', 'appointment time'].includes(cleanKey)) finalKey = 'time';
+        else if (['occupation', 'job', 'profession'].includes(cleanKey)) finalKey = 'occupation';
+
+        normalized[finalKey] = row[key];
+      }
+      return normalized;
+    });
   }
 
   async parseCSV(file) {
@@ -364,7 +314,6 @@ class ImportExportManager {
             });
             data.push(row);
           }
-
           resolve(data);
         } catch (error) { reject(error); }
       };
@@ -477,7 +426,7 @@ class ImportExportManager {
         count.textContent = this.duplicates.length;
         list.innerHTML = this.duplicates.slice(0, 5).map(dup => `
           <div class="flex items-center justify-between p-2 bg-yellow-50 rounded text-xs">
-            <span>${dup.importRow.name || dup.importRow.familyName || 'Row ' + (dup.importIndex + 1)}</span>
+            <span>${this.escapeHtml(String(dup.importRow.name || dup.importRow.familyName || 'Row ' + (dup.importIndex + 1)))}</span>
             <span class="text-yellow-700">Duplicate found</span>
           </div>
         `).join('');
@@ -543,6 +492,55 @@ class ImportExportManager {
             row.id = 'contact_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
             row.createdAt = new Date().toISOString();
             row.updatedAt = new Date().toISOString();
+
+            // Lowercase and format status so it doesn't show as 'Unknown'
+            if (row.status) {
+               row.status = String(row.status).toLowerCase().trim().replace(/ /g, '-');
+            } else {
+               row.status = 'unreached';
+            }
+
+            if (row.nextAppointment) {
+              try {
+                 let dateStr = row.nextAppointment;
+                 
+                 // Handle DD/MM/YYYY formatting issue
+                 if (typeof dateStr === 'string' && dateStr.includes('/')) {
+                    const parts = dateStr.split('/');
+                    if (parts.length === 3 && parts[2].length === 4) {
+                       dateStr = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                    }
+                 }
+
+                 let d;
+                 if (typeof dateStr === 'number') {
+                    d = new Date(Math.round((dateStr - 25569) * 86400 * 1000));
+                 } else {
+                    d = new Date(dateStr);
+                 }
+
+                 if (!isNaN(d.getTime())) {
+                    const finalDateStr = d.toISOString().split('T')[0];
+                    const timeStr = row.time ? String(row.time).trim() : '12:00';
+                    row.nextAppointment = `${finalDateStr}T${timeStr}`;
+
+                    await db.put('visits', {
+                      id: 'visit_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+                      contactId: row.id,
+                      date: row.nextAppointment,
+                      time: timeStr,
+                      notes: 'Imported appointment',
+                      status: 'scheduled',
+                      createdAt: new Date().toISOString(),
+                      updatedAt: new Date().toISOString()
+                    });
+                 } else {
+                    row.nextAppointment = '';
+                 }
+              } catch(e) {
+                 row.nextAppointment = '';
+              }
+            }
           }
           await db.put(importType, row);
           imported++;
@@ -556,7 +554,10 @@ class ImportExportManager {
       if (progressBarInner) progressBarInner.style.width = percentage + '%';
       if (progressText) progressText.textContent = 'Importing...';
       if (progressCount) progressCount.textContent = `${this.importProgress}/${this.importTotal}`;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      if (i % 50 === 0) {
+         await new Promise(resolve => setTimeout(resolve, 0));
+      }
     }
 
     this.showValidationSuccess(`Import complete: ${imported} imported, ${overwritten} overwritten, ${merged} merged, ${skipped} skipped`);
