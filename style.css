@@ -1,0 +1,485 @@
+/**
+ * Church Outreach Tracker
+ * Complete Stylesheet - All Phases
+ * Copyright (c) 2024. All rights reserved.
+ */
+
+/* ========== BASE STYLES ========== */
+
+/* Smooth transitions */
+.sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active navigation item */
+.nav-item.active {
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.nav-item.active i {
+  color: #2563eb;
+}
+
+/* Page view transitions */
+.page-view {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Offline banner animation */
+#offline-banner {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Sync indicator pulse */
+#sync-indicator {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 640px) {
+  .sidebar {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+  .sidebar, header, #offline-banner {
+    display: none !important;
+  }
+  
+  #main-content {
+    overflow: visible !important;
+  }
+}
+
+/* ========== CONTACT CARDS ========== */
+.contact-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contact-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== MODAL ANIMATIONS ========== */
+.modal {
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal .relative {
+  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ========== FILTER BUTTONS ========== */
+.filter-btn {
+  transition: all 0.2s ease;
+}
+
+.sort-btn:active {
+  transform: scale(0.95);
+}
+
+/* ========== CONTACT DETAIL VIEW ========== */
+#contact-detail {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== PROFILE TABS ========== */
+.profile-tab {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.profile-tab:hover {
+  color: #374151;
+}
+
+.profile-tab.active {
+  color: #2563eb;
+}
+
+/* ========== PIPELINE ANIMATION ========== */
+.pipeline-stage {
+  transition: all 0.3s ease;
+}
+
+.pipeline-stage.completed {
+  background-color: #10b981;
+}
+
+/* ========== FAMILY MEMBER CARDS ========== */
+.family-member-card {
+  transition: all 0.2s ease;
+}
+
+.family-member-card:hover {
+  transform: translateX(4px);
+}
+
+/* ========== VISIT TIMELINE ========== */
+.visit-timeline-item {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ========== FOLLOW-UP STYLES ========== */
+.view-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.view-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #2563eb;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.view-btn:hover::after {
+  width: 100%;
+}
+
+/* ========== OVERDUE PULSE ========== */
+.overdue-pulse {
+  animation: overduePulse 2s infinite;
+}
+
+@keyframes overduePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ========== CALENDAR STYLES ========== */
+.calendar-day {
+  transition: all 0.15s ease;
+}
+
+.calendar-day:hover {
+  background-color: #eff6ff;
+  transform: scale(1.02);
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-view-btn {
+  transition: all 0.2s ease;
+}
+
+.calendar-view-btn:active {
+  transform: scale(0.95);
+}
+
+/* ========== REPORTS STYLES ========== */
+.chart-container {
+  animation: chartFadeIn 0.5s ease-out;
+}
+
+@keyframes chartFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== PRAYER REQUEST STYLES ========== */
+.prayer-card {
+  transition: all 0.3s ease;
+}
+
+.prayer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.urgency-urgent {
+  animation: urgentPulse 2s infinite;
+}
+
+@keyframes urgentPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+}
+
+/* ========== FAMILY MODULE STYLES ========== */
+.family-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.family-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+
+.family-tab {
+  position: relative;
+}
+
+.family-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #2563eb;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.family-tab:hover::after {
+  width: 100%;
+}
+
+.family-tab.active::after {
+  width: 100%;
+}
+
+/* ========== IMPORT/EXPORT STYLES ========== */
+#import-dropzone {
+  transition: all 0.3s ease;
+}
+
+#import-dropzone:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+/* ========== SETTINGS STYLES ========== */
+.settings-nav-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.settings-nav-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: #2563eb;
+  border-radius: 0 4px 4px 0;
+  transition: height 0.3s ease;
+}
+
+.settings-nav-btn.active::before,
+.settings-nav-btn:hover::before {
+  height: 60%;
+}
+
+/* ========== TOGGLE SWITCH ========== */
+.peer:checked ~ div {
+  transition: all 0.3s ease;
+}
+
+/* ========== TOAST NOTIFICATION ========== */
+.toast-notification {
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========== DARK MODE ========== */
+body.dark {
+  background-color: #111827;
+  color: #e5e7eb;
+}
+
+body.dark .bg-white {
+  background-color: #1f2937;
+}
+
+body.dark .bg-gray-50 {
+  background-color: #111827;
+}
+
+body.dark .bg-gray-100 {
+  background-color: #374151;
+}
+
+body.dark .text-gray-800 {
+  color: #f3f4f6;
+}
+
+body.dark .text-gray-700 {
+  color: #e5e7eb;
+}
+
+body.dark .text-gray-600 {
+  color: #d1d5db;
+}
+
+body.dark .text-gray-500 {
+  color: #9ca3af;
+}
+
+body.dark .text-gray-400 {
+  color: #6b7280;
+}
+
+body.dark .border-gray-200 {
+  border-color: #374151;
+}
+
+body.dark .border-gray-100 {
+  border-color: #1f2937;
+}
+
+body.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+body.dark header {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+body.dark .sidebar {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+body.dark input:focus,
+body.dark select:focus,
+body.dark textarea:focus {
+  border-color: #3b82f6;
+}
+
+body.dark .hover\:bg-gray-50:hover {
+  background-color: #374151;
+}
+
+body.dark .hover\:bg-gray-100:hover {
+  background-color: #4b5563;
+}
+
+body.dark .calendar-day:hover {
+  background-color: #374151;
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 640px) {
+  #contacts-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .calendar-day {
+    min-height: 60px;
+  }
+}
